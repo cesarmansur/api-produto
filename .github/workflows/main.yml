@@ -49,3 +49,35 @@ jobs:
           tags: |
             cesarmansur/kube-api-produto:latest
             cesarmansur/kube-api-produto:${{github.run_number}}
+
+  # CD job
+  CD:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [CI]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Kubernetes set context
+        uses: Azure/k8s-set-context@v1
+        with:
+          # Acceptable values: kubeconfig or service-account
+          method: kubeconfig
+          # Kubernetes Config
+          kubeconfig: ${{secrets.K8S_CONFIG}}
+          # If your kubeconfig has multiple contexts, use this field to use a specific context, otherwise the default one would be chosen
+
+      - name: Deploy MongoDB to Kubernetes cluster
+        uses: Azure/k8s-deploy@v1.3
+        with:
+          manifests: |
+            k8s/mongodb/deployment_mongodb.yaml
+            k8s/mongodb/service_mongodb.yaml
+
+      - name: Deploy API to Kubernetes cluster
+        uses: Azure/k8s-deploy@v1.3
+        with:
+          manifests: |
+            k8s/api/deployment_api.yaml
+            k8s/api/service_api.yaml
