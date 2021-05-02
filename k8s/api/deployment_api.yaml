@@ -14,7 +14,7 @@ spec:
       spec:
          containers:
             - name: api
-              image: cesarmansur/kube-api-produto:v1
+              image: cesarmansur/kube-api-produto:v2
               ports:
                  - containerPort: 8080
               env:
