@@ -78,6 +78,7 @@ jobs:
       - name: Deploy API to Kubernetes cluster
         uses: Azure/k8s-deploy@v1.3
         with:
+          images: cesarmansur/kube-api-produto:${{github.run_number}}
           manifests: |
             k8s/api/deployment_api.yaml
             k8s/api/service_api.yaml
